@@ -143,7 +143,7 @@ class FaceRecognizer:
                 filepath = "%s/%s/%s" % (path, folder, self.description_filename)
                 if os.path.exists(filepath):
                     data = pd.read_excel(filepath)
-                    desc = data.iloc[:, :].values.tolist()
+                    desc = data.iloc[:, 1].values.tolist()
                     desc = np.array(desc).reshape(1, -1)[0]
                     username = folder
                     self.users[username] = desc
