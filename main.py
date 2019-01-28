@@ -22,6 +22,7 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_lock.clicked.connect(self.onclick_btn_lock)
         self.btn_cancel.clicked.connect(self.onclick_btn_cancel)
         self.btn_capture.clicked.connect(self.onclick_btn_capture)
+        self.btn_calc.clicked.connect(self.onclick_btn_calc)
         self.txt_name.setFocus(True)
         self.cap = None
         self.timer = QTimer(self)
@@ -54,6 +55,7 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
             self.btn_lock.setEnabled(False)
             self.btn_cancel.setEnabled(True)
             self.btn_capture.setEnabled(True)
+            self.btn_calc.setEnabled(True)
             self.txt_name.setEnabled(False)
             self.cap = cv2.VideoCapture(0)
             self.timer.start(50)
@@ -64,6 +66,7 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_lock.setEnabled(True)
         self.btn_cancel.setEnabled(False)
         self.btn_capture.setEnabled(False)
+        self.btn_calc.setEnabled(False)
         self.txt_name.setEnabled(True)
         self.txt_name.setText("")
         self.txt_name.setFocus(True)
@@ -80,13 +83,17 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
                 os.makedirs(user_folder)
 
             for face in self.faces:
-                image_name = str(time.time())
+                image_name = str(int(time.time()))
                 image = self.frame[face['p1'][1]:face['p2'][1], face['p1'][0]:face['p2'][0]]
-                cv2.imwrite(user_folder + os.sep + image_name, image)
+                cv2.imwrite(user_folder + os.sep + image_name + ".jpg", image)
 
             QtWidgets.QMessageBox.about(None, "提示", "成功存檔！")
         else:
             QtWidgets.QMessageBox.about(None, "提示", "請確保只有一張人臉！")
+
+    def onclick_btn_calc(self):
+        user_folder = self.folder + os.sep + self.name
+        self.fr.calc_128D_by_path(user_folder, True)
 
 
 if __name__ == "__main__":

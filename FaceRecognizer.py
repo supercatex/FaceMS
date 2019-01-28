@@ -127,10 +127,9 @@ class FaceRecognizer:
                     descriptions.append(face['description'])
 
             desc = np.average(descriptions, axis=0)
-            print(desc)
 
             if export:
-                writer = pd.ExcelWriter("%s/%s" % (path, self.description_filename))
+                writer = pd.ExcelWriter(path + os.sep + self.description_filename, engine='xlsxwriter')
                 data = pd.DataFrame(desc)
                 data.to_excel(writer, '128D', float_format='%.9f')
                 writer.save()
