@@ -34,22 +34,12 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frame = None
         self.faces = None
         self.folder = "users"
-        self.model = QtGui.QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(["名稱"])
-        self.model.setRowCount(0)
-        root = self.model.invisibleRootItem()
-        for _, folder_names, _ in os.walk(self.folder):
-            for folder_name in folder_names:
-                item = QtGui.QStandardItem(folder_name)
-                item.setEditable(False)
-                root.appendRow([item])
-        self.tree_view.setModel(self.model)
-        self.tree_view.expandAll()
         self.tree_view.doubleClicked.connect(self.ondbclick_tree_view)
         self.tab_main.currentChanged.connect(self.onchanged_tab_main)
         self.btn_start.clicked.connect(self.onclick_btn_start)
         self.btn_recognize.clicked.connect(self.onclick_btn_recognize)
         self.btn_upload.clicked.connect(self.onclick_btn_upload)
+        self.model = QtGui.QStandardItemModel()
 
     def update_image(self):
         if self.cap.isOpened():
@@ -139,6 +129,7 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
             self.onclick_btn_cancel()
             self.fr.load_users(self.folder)
         else:
+            self.onclick_btn_cancel()
             self.timer1.stop()
             self.timer2.stop()
             if self.cap is not None:
@@ -146,6 +137,19 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):
             self.name = ""
             self.frame = None
             self.faces = None
+
+        if index == 1:
+            self.model = QtGui.QStandardItemModel()
+            self.model.setHorizontalHeaderLabels(["名稱"])
+            self.model.setRowCount(0)
+            root = self.model.invisibleRootItem()
+            for _, folder_names, _ in os.walk(self.folder):
+                for folder_name in folder_names:
+                    item = QtGui.QStandardItem(folder_name)
+                    item.setEditable(False)
+                    root.appendRow([item])
+            self.tree_view.setModel(self.model)
+            self.tree_view.expandAll()
 
     def onclick_btn_start(self):
         self.btn_start.setEnabled(False)
